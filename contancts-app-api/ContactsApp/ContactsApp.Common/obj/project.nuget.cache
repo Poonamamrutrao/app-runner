@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "Huz86kzCSM81x27WNy8xqVZA4I8dKhAjgMvGEQt7BnfH+tgXIxJdk76eYYWkv2J/UR8Zx4nkJkigYKOJOoDEUg==",
+  "success": true,
+  "projectFilePath": "D:\\dotnet\\contancts-app-api\\ContactsApp\\ContactsApp.Common\\ContactsApp.Common.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\poonama\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.27\\microsoft.netcore.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\poonama\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.27\\microsoft.windowsdesktop.app.ref.6.0.27.nupkg.sha512",
+    "C:\\Users\\poonama\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.27\\microsoft.aspnetcore.app.ref.6.0.27.nupkg.sha512"
+  ],
+  "logs": []
+}

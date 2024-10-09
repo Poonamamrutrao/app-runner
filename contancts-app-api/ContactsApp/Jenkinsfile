@@ -1,0 +1,61 @@
+pipeline {
+  agent { label 'master' }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '7'))
+    gitLabConnection('myGitlab')
+    ansiColor('xterm')
+    timestamps()
+  }
+
+  tools {
+    jdk 'jdk-11.0.16'
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'sh gradlew build -x test'
+      }
+    }
+    stage('Unit Test') {
+      steps {
+        sh 'sh gradlew test jacocoRootReport'
+      }
+    }
+    stage('Build and Publish Docker') {
+      steps {
+        sh 'sh gradlew buildDocker -Ppush -x test -x compileJava -x bootJar'
+      }
+    }
+    
+  }
+  post {
+   
+    success {
+        // notifySlack('SUCCESSFUL')
+        updateGitlabCommitStatus(name: 'jenkins', state: 'success')
+        cleanWs()
+    }
+    fixed {
+      emailext (
+        subject: "Build is back to normal!: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+        body: '${SCRIPT, template="groovy-html.template"}',
+        to: "DevOps@futurism.com",
+        recipientProviders: [[$class: 'CulpritsRecipientProvider']]
+      ) 
+    }
+    failure {
+      notifySlack('FAILED')
+      script {
+        USEREMAIL = sh (script: 'git show -s --format=%ae',returnStdout: true)
+      }
+      emailext (
+        subject: "Build failed: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+        body: '${SCRIPT, template="groovy-html.template"}',
+        to: "DevOps@futurism.com, ${USEREMAIL}",
+        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+      )
+      updateGitlabCommitStatus(name: 'jenkins', state: 'failed')
+      cleanWs()
+    }
+  }
+}
